@@ -5,22 +5,19 @@ import android.text.TextUtils;
 
 import com.java.note.mvp.R;
 
-import java.util.List;
-
-import common.User;
 import common.UserTable;
 
 public class UsersPresenter {
 
-    private UsersActivity view;
+    private UsersContractView view;
     private final UsersModel model;
 
     UsersPresenter(UsersModel model) {
         this.model = model;
     }
 
-    public void attachView(UsersActivity usersActivity) {
-        view = usersActivity;
+    public void attachView(UsersContractView view) {
+        this.view = view;
     }
 
     public void detachView() {
@@ -32,12 +29,7 @@ public class UsersPresenter {
     }
 
     private void loadUsers() {
-        model.loadUsers(new UsersModel.LoadUserCallback() {
-            @Override
-            public void onLoad(List<User> users) {
-                view.showUsers(users);
-            }
-        });
+        model.loadUsers(users -> view.showUsers(users));
     }
 
     public void add() {
@@ -51,24 +43,18 @@ public class UsersPresenter {
         contentValues.put(UserTable.COLUMN.EMAIL, userData.getEmail());
 
         view.showProgress();
-        model.addUser(contentValues, new UsersModel.CompleteCallback() {
-            @Override
-            public void onComplete() {
-                view.hideProgress();
-                loadUsers();
-            }
+        model.addUser(contentValues, () -> {
+            view.hideProgress();
+            loadUsers();
         });
 
     }
 
     public void clear() {
         view.showProgress();
-        model.clearUsers(new UsersModel.CompleteCallback() {
-            @Override
-            public void onComplete() {
-                view.hideProgress();
-                loadUsers();
-            }
+        model.clearUsers(() -> {
+            view.hideProgress();
+            loadUsers();
         });
     }
 }

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,7 +17,7 @@ import common.User;
 import common.UserAdapter;
 import database.DbHelper;
 
-public class UsersActivity extends AppCompatActivity {
+public class UsersActivity extends AppCompatActivity implements UsersContractView {
 
     private UserAdapter userAdapter;
 
@@ -40,19 +39,9 @@ public class UsersActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.name);
         editTextEmail = findViewById(R.id.email);
 
-        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.add();
-            }
-        });
+        findViewById(R.id.add).setOnClickListener(v -> presenter.add());
 
-        findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.clear();
-            }
-        });
+        findViewById(R.id.clear).setOnClickListener(v -> presenter.clear());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
